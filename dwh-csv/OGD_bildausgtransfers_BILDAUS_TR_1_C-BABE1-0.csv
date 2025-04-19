@@ -1,0 +1,28 @@
+code;name;FK;en_name;de_desc;de_link;en_desc;en_link;de_syn;en_syn
+BABE2-11;Kindertagesheime <11>;BABE3-1;Child-care centres <11>;;;;;;
+BABE2-21;Volksschulen <21>;BABE3-2;Primary schools <21>;;;;;;
+BABE2-22;Hauptschulen/Neue Mittelschulen <22>;BABE3-2;Lower secondary schools<22>;;;;;;
+BABE2-23;Sonderschulen <23>;BABE3-2;Special needs schools <23>;;;;;;
+BABE2-24;Polytechnische Schulen <24>;BABE3-2;Pre-vocational schools <24>;;;;;;
+BABE2-31;Allgemeinbildende höhere Schulen <31>;BABE3-3;General secondary schools <31>;;;;;;
+BABE2-41;Berufsschulen <41>;BABE3-4;Vocational schools for apprentices <41>;;;;;;
+BABE2-51;Technisch gewerbliche Schulen <51>;BABE3-5;Technical and industrial training institutions <51>;;;;;;
+BABE2-52;Kaufmännische Schulen <52>;BABE3-5;Business schools and academies <52>;;;;;;
+BABE2-53;Sozial- und wirtschaftsberufliche Schulen <53>;BABE3-5;Social and economic schools <53>;;;;;;
+BABE2-54;Lehrerbildende mittlere und höhere Schulen <54>;BABE3-5;Intermediate and higher schools for teacher training <54>;;;;;;
+BABE2-55;Sonstige berufsbildende mittlere und höheren Schulen <55>;BABE3-5;Other intermediate and higher vocational schools <55>;;;;;;
+BABE2-61;Pädagogische Akademien/Hochschulen <61>;BABE3-6;Educational academies/universities <61>;;;;;;
+BABE2-71;Fachhochschulen <71>;BABE3-7;Universities of applied sciences <71>;;;;;;
+BABE2-81;Universitäten <81>;BABE3-8;Universities <81>;;;;;;
+BABE2-91;Sonstige Schulen <91>;BABE3-9;Other schools <91>;;;;;;
+BABE2-92;Ministerium und Schulverwaltung <92>;BABE3-9;Ministry, school administration <91>;;;;;;
+BABE2-93;Bildungsrelevante Sozialleistungen <93>;BABE3-9;Education-related social benefits <92>;;;;;;
+BABE3-1;Kindertagesheime <1>;;Child-care centres <1>;;;;;;
+BABE3-2;Allgemeinbildende Pflichtschulen <2>;;General compulsory education <2>;;;;;;
+BABE3-3;Allgemeinbildende höhere Schulen <3>;;General secondary schools <3>;;;;;;
+BABE3-4;Berufsschulen <4>;;Vocational schools for apprentices  <4>;;;;;;
+BABE3-5;Berufsbildende mittlere und höhere Schulen <5>;;Intermediate and higher vocational schools <5>;;;;;;
+BABE3-6;Pädagogische Akademien/Hochschulen  <6>;;Educational academies/universities  <6>;;;;;;
+BABE3-7;Fachhochschulen <7>;;Universities of applied sciences <7>;;;;;;
+BABE3-8;Universitäten <8>;;Universities <8>;;;;;;
+BABE3-9;Ministerium, Verwaltung <9>;;Ministry, administration <9>;;;;;;

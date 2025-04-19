@@ -1,1 +1,111 @@
-# dbi-dwh-bildungsausgaben
+= dbi-dwh-bildungsausgaben
+
+== Abstract
+
+Dieses Data Warehouse repräsentiert die Ausgaben für Bildung der Republik Österreich.
+
+* Zeitraum der Daten: 2000-2023
+* Ersteller der Daten: Statistik Austria auf https://www.data.gv.at[]
+* Quelle und weitere Infos: https://www.data.gv.at/katalog/de/dataset/stat_bildungsausgaben-transfers-insgesamt[]
+
+== Datengrundlage
+
+* 5 CSV-Dateien (siehe Ordner `dwh-csv`).
+
+=== Fact: `OGD_bildausgtransfers_BILDAUS_TR_1.csv`
+
+* Liste aller Transaktion der Republik Österreich bzgl. Bildungsausgaben.
+
+[source,csv]
+----
+include::dwh-csv/OGD_bildausgtransfers_BILDAUS_TR_1.csv[lines=1..5]
+...
+----
+
+Spalten:
+
+
+|===
+|Abkürzung |Bedeutung
+
+|Spalte 1: C-A10-0
+|Code des Jahres
+
+|Spalte 2: C-BARG-0
+|Code des Bundeslandes
+
+|Spalte 3: C-BABE1-0
+|Codes des Institutions-/Schultyps
+
+|Spalte 4-13: F-T02 ... F-T11
+|jewils Code des Transfertyps (Header) mit Betrag
+|===
+
+
+=== Dimension: `OGD_bildausgtransfers_BILDAUS_TR_1_C-A10-0.csv`
+
+* Ordnet Code einem Jahr zu.
+
+[source,csv]
+----
+include::dwh-csv/OGD_bildausgtransfers_BILDAUS_TR_1_C-A10-0.csv[lines=1..5]
+...
+----
+
+=== Dimension: `OGD_bildausgtransfers_BILDAUS_TR_1_C-BABE1-0.csv`
+
+* Ordnet Code einer Institution (Schultyp,...) zu.
+
+[source,csv]
+----
+include::dwh-csv/OGD_bildausgtransfers_BILDAUS_TR_1_C-BABE1-0.csv[lines=1..5]
+...
+----
+
+=== Dimension: `OGD_bildausgtransfers_BILDAUS_TR_1_C-BARG-0.csv`
+
+* Ordnet Code einem Bundesland zu.
+
+[source, csv]
+----
+include::dwh-csv/OGD_bildausgtransfers_BILDAUS_TR_1_C-BARG-0.csv[lines=1..5]
+----
+
+=== Dimension: `OGD_bildausgtransfers_BILDAUS_TR_1_HEADER.csv`
+
+* Ordnet Code einem Transfertypen zu.
+
+[source, csv]
+----
+include::dwh-csv/OGD_bildausgtransfers_BILDAUS_TR_1_HEADER.csv[lines=1..5]
+----
+
+== Stageing
+
+* Das Stateing findet mithilfe einer Quarkus-Applikation statt.
+* Diese macht aus den CSV-Daten zuerst ein normalisiertes objektorientiertes, danach mittels Panache ein relationales Modell.
+* Das Generieren der Tabelle findet mit Quarkus (nicht mit händischen CREATE-Statements statt).
+
+Wie bekommt man die Daten in die Datenbank?
+
+* PostgreSQL-Datenbank starten
+
+[source, bash]
+----
+chmod u+x postgres-run-in-docker.sh
+./postgres-run-in-docker.sh
+----
+
+* Quarkus-App starten
+
+[source, bash]
+----
+cd dwh-pipeline
+./mvnw clean quarkus:dev
+----
+
+FERTIG. Die Daten sind in der Datenbank.
+
+== Abfragen
+
+Diese sind in link:dwh-queries/queries.adoc[] dokumentiert.

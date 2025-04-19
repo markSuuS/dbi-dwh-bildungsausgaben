@@ -1,0 +1,27 @@
+code;name;;en_name;de_desc;de_link;en_desc;en_link;de_syn;en_syn
+BARG-11;Bund (inkl. Universitäten) <11>;;Federal government  (incl. universities) <11>;;;;;;
+BARG-21;Burgenland (LD) <21>;;Burgenland (Laender/provinces) <21>;;;;;;
+BARG-22;Kärnten (LD) <22>;;Kärnten (L/P) <22>;;;;;;
+BARG-23;Niederösterreich (LD) <23>;;Niederösterreich (L/P) <23>;;;;;;
+BARG-24;Oberösterreich (LD) <24>;;Oberösterreich (L/P) <24>;;;;;;
+BARG-25;Salzburg (LD) <25>;;Salzburg (L/P) <25>;;;;;;
+BARG-26;Steiermark (LD) <26>;;Steiermark (L/P) <26>;;;;;;
+BARG-27;Tirol (LD) <27>;;Tirol (L/P) <27>;;;;;;
+BARG-28;Vorarlberg (LD) <28>;;Vorarlberg (L/P) <28>;;;;;;
+BARG-31;Wien <31>;;Vienna <31>;;;;;;
+BARG-41;Burgenland (GM) <41>;;Burgenland (Communes) <41>;;;;;;
+BARG-42;Kärnten (GM) <42>;;Kärnten (C) <42>;;;;;;
+BARG-43;Niederösterreich (GM) <43>;;Niederösterreich (C) <43>;;;;;;
+BARG-44;Oberösterreich (GM) <44>;;Oberösterreich (C) <44>;;;;;;
+BARG-45;Salzburg (GM) <45>;;Salzburg (C) <45>;;;;;;
+BARG-46;Steiermark (GM) <46>;;Steiermark (C) <46>;;;;;;
+BARG-47;Tirol (GM) <47>;;Tirol (C) <47>;;;;;;
+BARG-48;Vorarlberg (GM) <48>;;Vorarlberg (C) <48>;;;;;;
+BARG-51;Burgenland (SGV) <51>;;Burgenland (Regional school boards) <51>;;;;;;
+BARG-52;Kärnten (SGV) <52>;;Kärnten (RSB) <52>;;;;;;
+BARG-53;Niederösterreich (SGV) <53>;;Niederösterreich (RSB) <53>;;;;;;
+BARG-54;Oberösterreich (SGV) <54>;;Oberösterreich (RSB) <54>;;;;;;
+BARG-55;Salzburg (SGV) <55>;;Salzburg (RSB) <55>;;;;;;
+BARG-56;Steiermark (SGV) <56>;;Steiermark (RSB) <56>;;;;;;
+BARG-57;Tirol (SGV) <57>;;Tirol (RSB) <57>;;;;;;
+BARG-58;Vorarlberg (SGV) <58>;;Vorarlberg (RSB) <58>;;;;;;
