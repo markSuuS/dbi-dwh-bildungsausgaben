@@ -15,6 +15,7 @@ Dieses Data Warehouse repräsentiert die Ausgaben für Bildung der Republik Öst
 === Fact: `OGD_bildausgtransfers_BILDAUS_TR_1.csv`
 
 * Liste aller Transaktion der Republik Österreich bzgl. Bildungsausgaben.
+* Gleichzeitig einzige FACT-Tabelle.
 
 [source,csv]
 ----
