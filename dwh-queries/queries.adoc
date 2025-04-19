@@ -3,7 +3,7 @@
 :toc-title: Inhaltsverzeichnis
 :sectnums:
 
-== 1. Höchste Ausgaben nach Bundesland und Jahr
+== Höchste Ausgaben nach Bundesland und Jahr
 
 [source, sql]
 ----
@@ -16,27 +16,26 @@ JOIN fact_education_spending fes ON fs.es_fact_spendings = fes.es_id
 JOIN dimregion_codes drc ON fes.es_region_code = drc.codes
 JOIN dim_region dr ON drc.dimregion_r_id = dr.r_id
 GROUP BY fes.es_year, dr.r_region_de
-ORDER BY total_amount DESC
-FETCH FIRST 1 ROW ONLY;
+ORDER BY fes.es_year DESC;
 ----
 
-== 2. Gesamtsummen (gesamt, pro Jahr, pro Bundesland)
+== Gesamtsummen (gesamt, pro Jahr, pro Bundesland)
 
 [source, sql]
 ----
 -- Gesamt
-SELECT SUM(fs.amount) AS total_amount
+SELECT SUM(fs.amount) AS Totalsumme
 FROM fact_spending fs;
 
 -- Pro Jahr
-SELECT fes.es_year, SUM(fs.amount) AS total_amount
+SELECT fes.es_year, SUM(fs.amount) AS Totalsumme
 FROM fact_spending fs
          JOIN fact_education_spending fes ON fs.es_fact_spendings = fes.es_id
 GROUP BY fes.es_year
 ORDER BY fes.es_year;
 
 -- Pro Bundesland
-SELECT dr.r_region_de, SUM(fs.amount) AS total_amount
+SELECT dr.r_region_de, SUM(fs.amount) AS Totalsumme
 FROM fact_spending fs
 JOIN fact_education_spending fes ON fs.es_fact_spendings = fes.es_id
 JOIN dimregion_codes drc ON fes.es_region_code = drc.codes
@@ -44,14 +43,14 @@ JOIN dim_region dr ON drc.dimregion_r_id = dr.r_id
 GROUP BY dr.r_region_de;
 ----
 
-== 3. Abfrage mit CUBE
+== Abfrage mit CUBE pro Jahr und Bundesland
 
 [source, sql]
 ----
 SELECT
     fes.es_year,
     dr.r_region_de,
-    SUM(fs.amount) AS total_amount
+    SUM(fs.amount) AS Totalsumme
 FROM fact_spending fs
 JOIN fact_education_spending fes ON fs.es_fact_spendings = fes.es_id
 JOIN dimregion_codes drc ON fes.es_region_code = drc.codes
@@ -60,16 +59,13 @@ GROUP BY CUBE(fes.es_year, dr.r_region_de)
 ORDER BY fes.es_year, dr.r_region_de;
 ----
 
-== 4. Abfrage pro Quartal (5-Jahres-Zeitraum hypothetisch)
+== Abfrage pro Quartal (5-Jahres-Zeitraum)
 
-Da kein Quartalsfeld existiert, ist diese Abfrage **nicht möglich**. Vorschläge:
+Da kein Quartalsfeld existiert, ist diese Abfrage **nicht möglich**.
 
-* Füge ein Quartalsattribut zur `dim_year`-Tabelle hinzu.
-* Alternativ: Verwende Monatsdaten (falls vorhanden) und rechne Quartale.
+== Vergleich Ausführungspläne
 
-== 5. Vergleich Ausführungspläne
-
-Ausführungspläne können in der jeweiligen SQL-Umgebung mit `EXPLAIN` ermittelt werden:
+Ausführungspläne können mit `EXPLAIN` ermittelt werden:
 
 [source, sql]
 ----
@@ -79,15 +75,15 @@ EXPLAIN SELECT ... -- Für Punkt 3 (CUBE)
 
 Zu beachten:
 
-* `CUBE` kann performanter sein bei Analysen, aber teurer in der Ausführung.
+* `CUBE` ist performanter bei Analysen, aber teurer in der Ausführung.
 * Prüfe, ob Indizes auf `es_fact_spendings`, `amount`, `es_year`, `es_region_code` vorhanden sind.
 * Falls nicht: Anlegen via `CREATE INDEX ...`
 
-== 6. Anzahl Ausgabepositionen pro Bundesland
+== Anzahl Ausgabepositionen pro Bundesland
 
 [source, sql]
 ----
-SELECT dr.r_region_de, COUNT(*) AS ausgabepositionen
+SELECT dr.r_region_de, COUNT(*) AS Ausgabepositionen
 FROM fact_spending fs
 JOIN fact_education_spending fes ON fs.es_fact_spendings = fes.es_id
 JOIN dimregion_codes drc ON fes.es_region_code = drc.codes
@@ -95,23 +91,15 @@ JOIN dim_region dr ON drc.dimregion_r_id = dr.r_id
 GROUP BY dr.r_region_de;
 ----
 
-== 7. Liste aller Ausgabeposten sortiert nach Betrag
 
-[source, sql]
-----
-SELECT abs(fs.amount), fs.transactiontypecode
-FROM fact_spending fs
-ORDER BY fs.amount ASC;
-----
-
-== 8. Summe pro Institution + Rangliste im Jahr xyz
+== Summe pro Institution + Rangliste im Jahr xyz
 
 [source, sql]
 ----
 WITH summed AS (
     SELECT
         fes.es_institution,
-        SUM(fs.amount) AS total_amount
+        SUM(fs.amount) AS Totalsumme
     FROM fact_spending fs
     JOIN fact_education_spending fes ON fs.es_fact_spendings = fes.es_id
     WHERE fes.es_year = 2020  -- Beispieljahr
@@ -120,7 +108,44 @@ WITH summed AS (
 SELECT
     i.i_institution_de,
     s.total_amount,
-    RANK() OVER (ORDER BY s.total_amount DESC) AS rang
+    RANK() OVER (ORDER BY s.total_amount DESC) AS Rang
 FROM summed s
 JOIN dim_institution i ON s.es_institution = i.i_code_2;
+----
+
+== Durchschnittliche Ausgaben pro Institution
+
+[source, sql]
+----
+SELECT
+    di.i_institution_de AS InstitutionName,
+    AVG(fs.amount) AS Durchschnittsausgaben
+FROM
+    fact_spending fs
+        JOIN
+    fact_education_spending fes ON fs.es_fact_spendings = fes.es_id
+        JOIN
+    dim_institution di ON fes.es_institution = di.i_code_1
+GROUP BY
+    di.i_institution_de
+ORDER BY
+    durchschnittsausgaben DESC;
+----
+
+== Top 5 Ausgaben pro Transaktionstyp (nach Betrag)
+
+[source, sql]
+----
+SELECT
+    dtt.t_transaction_type_de AS Transaktionstyp,
+    SUM(fs.amount) AS Gesamtbetrag
+FROM
+    fact_spending fs
+        JOIN
+    dim_transaction_type dtt ON fs.transactiontypecode = dtt.t_code
+GROUP BY
+    dtt.t_transaction_type_de
+ORDER BY
+    Gesamtbetrag DESC
+LIMIT 5;
 ----
