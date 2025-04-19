@@ -1,0 +1,126 @@
+= SQL-Abfragen zu Bildungsausgaben
+:toc:
+:toc-title: Inhaltsverzeichnis
+:sectnums:
+
+== 1. Höchste Ausgaben nach Bundesland und Jahr
+
+[source, sql]
+----
+SELECT
+    fes.es_year,
+    dr.r_region_de,
+    SUM(fs.amount) AS total_amount
+FROM fact_spending fs
+JOIN fact_education_spending fes ON fs.es_fact_spendings = fes.es_id
+JOIN dimregion_codes drc ON fes.es_region_code = drc.codes
+JOIN dim_region dr ON drc.dimregion_r_id = dr.r_id
+GROUP BY fes.es_year, dr.r_region_de
+ORDER BY total_amount DESC
+FETCH FIRST 1 ROW ONLY;
+----
+
+== 2. Gesamtsummen (gesamt, pro Jahr, pro Bundesland)
+
+[source, sql]
+----
+-- Gesamt
+SELECT SUM(fs.amount) AS total_amount
+FROM fact_spending fs;
+
+-- Pro Jahr
+SELECT fes.es_year, SUM(fs.amount) AS total_amount
+FROM fact_spending fs
+         JOIN fact_education_spending fes ON fs.es_fact_spendings = fes.es_id
+GROUP BY fes.es_year
+ORDER BY fes.es_year;
+
+-- Pro Bundesland
+SELECT dr.r_region_de, SUM(fs.amount) AS total_amount
+FROM fact_spending fs
+JOIN fact_education_spending fes ON fs.es_fact_spendings = fes.es_id
+JOIN dimregion_codes drc ON fes.es_region_code = drc.codes
+JOIN dim_region dr ON drc.dimregion_r_id = dr.r_id
+GROUP BY dr.r_region_de;
+----
+
+== 3. Abfrage mit CUBE
+
+[source, sql]
+----
+SELECT
+    fes.es_year,
+    dr.r_region_de,
+    SUM(fs.amount) AS total_amount
+FROM fact_spending fs
+JOIN fact_education_spending fes ON fs.es_fact_spendings = fes.es_id
+JOIN dimregion_codes drc ON fes.es_region_code = drc.codes
+JOIN dim_region dr ON drc.dimregion_r_id = dr.r_id
+GROUP BY CUBE(fes.es_year, dr.r_region_de)
+ORDER BY fes.es_year, dr.r_region_de;
+----
+
+== 4. Abfrage pro Quartal (5-Jahres-Zeitraum hypothetisch)
+
+Da kein Quartalsfeld existiert, ist diese Abfrage **nicht möglich**. Vorschläge:
+
+* Füge ein Quartalsattribut zur `dim_year`-Tabelle hinzu.
+* Alternativ: Verwende Monatsdaten (falls vorhanden) und rechne Quartale.
+
+== 5. Vergleich Ausführungspläne
+
+Ausführungspläne können in der jeweiligen SQL-Umgebung mit `EXPLAIN` ermittelt werden:
+
+[source, sql]
+----
+EXPLAIN SELECT ... -- Für Punkt 2
+EXPLAIN SELECT ... -- Für Punkt 3 (CUBE)
+----
+
+Zu beachten:
+
+* `CUBE` kann performanter sein bei Analysen, aber teurer in der Ausführung.
+* Prüfe, ob Indizes auf `es_fact_spendings`, `amount`, `es_year`, `es_region_code` vorhanden sind.
+* Falls nicht: Anlegen via `CREATE INDEX ...`
+
+== 6. Anzahl Ausgabepositionen pro Bundesland
+
+[source, sql]
+----
+SELECT dr.r_region_de, COUNT(*) AS ausgabepositionen
+FROM fact_spending fs
+JOIN fact_education_spending fes ON fs.es_fact_spendings = fes.es_id
+JOIN dimregion_codes drc ON fes.es_region_code = drc.codes
+JOIN dim_region dr ON drc.dimregion_r_id = dr.r_id
+GROUP BY dr.r_region_de;
+----
+
+== 7. Liste aller Ausgabeposten sortiert nach Betrag
+
+[source, sql]
+----
+SELECT abs(fs.amount), fs.transactiontypecode
+FROM fact_spending fs
+ORDER BY fs.amount ASC;
+----
+
+== 8. Summe pro Institution + Rangliste im Jahr xyz
+
+[source, sql]
+----
+WITH summed AS (
+    SELECT
+        fes.es_institution,
+        SUM(fs.amount) AS total_amount
+    FROM fact_spending fs
+    JOIN fact_education_spending fes ON fs.es_fact_spendings = fes.es_id
+    WHERE fes.es_year = 2020  -- Beispieljahr
+    GROUP BY fes.es_institution
+)
+SELECT
+    i.i_institution_de,
+    s.total_amount,
+    RANK() OVER (ORDER BY s.total_amount DESC) AS rang
+FROM summed s
+JOIN dim_institution i ON s.es_institution = i.i_code_2;
+----
