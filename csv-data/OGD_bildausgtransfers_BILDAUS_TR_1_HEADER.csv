@@ -1,0 +1,14 @@
+code;name;en_name;;;;;;;
+C-A10-0;Zeit;Time;;;;;;;
+C-BARG-0;Regionale Gliederung;Regional breakdown;;;;;;;
+C-BABE1-0;Bildungseinrichtung;Educational institution;;;;;;;
+F-T02;Transfers an Bund;Transfers to federal government;;;;;;;
+F-T03;Transfers an Länder;Transfers to Laender/provinces;;;;;;;
+F-T04;Transfers an Gemeinden;Transfers to communes;;;;;;;
+F-T05;Transfers an Gemeindeverbände;Transfers to regional boards;;;;;;;
+F-T06;Transfers an sonstige Träger öffentlichen Rechts;Transfers to other bodies under public law;;;;;;;
+F-T07;Transfers an das Ausland;Transfers abroad;;;;;;;
+F-T08;Transfers an private Haushalte;Transfers to private households;;;;;;;
+F-T09;Transfers an PDOEs;Transfers to private non-profit services;;;;;;;
+F-T10;Transfers an Unternehmungen;Transfers to enterprises;;;;;;;
+F-T11;Transfers an SV-Träger;Transfers to social security institutions;;;;;;;
